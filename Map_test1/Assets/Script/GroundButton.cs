@@ -27,25 +27,7 @@ public class GroundButton : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isOn == true)
-        {
-            gameObject.GetComponent<Rigidbody>().AddForce(Vector3.down * power*0.1f);
-            if (gameObject.transform.position.y < ButtonMinY)
-                gameObject.transform.position += new Vector3(0, ButtonMinY- gameObject.transform.position.y, 0);
-            if (puzzle.transform.localPosition.z < 5.1f )
-                puzzle.transform.Translate(Vector3.forward * wallpower * Time.deltaTime, Space.World);
-
-
-        }
-        else if (isOn == false)
-        {
-            gameObject.GetComponent<Rigidbody>().AddForce(Vector3.up * power);
-            if (gameObject.transform.position.y > ButtonMaxY)
-                gameObject.transform.position += new Vector3(0, ButtonMaxY - gameObject.transform.position.y, 0);
-            if(puzzle.transform.localPosition.z>0)
-               puzzle.transform.Translate(Vector3.back * wallpower * Time.deltaTime, Space.World);
-        }
-
+        StartCoroutine(ButtonDown());
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -54,7 +36,6 @@ public class GroundButton : MonoBehaviour
         {
             isOn = true;
             gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-          //  puzzle.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
         }
     }
@@ -65,15 +46,24 @@ public class GroundButton : MonoBehaviour
         {
             isOn = false;
             gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-          //  puzzle.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
         }
     }
+
+
+    IEnumerator ButtonDown()
+    {
+        if (isOn == true && gameObject.transform.position.y > ButtonMinY)
+            gameObject.transform.Translate(0, -0.01f, 0);
+        else if (isOn == false && gameObject.transform.position.y < ButtonMaxY)
+            gameObject.transform.Translate(0, 0.01f, 0);
+
+        if (isOn == true && puzzle.transform.localPosition.z < 5.1f)
+            puzzle.transform.Translate(0, 0, 0.05f);
+        else if (isOn == false && puzzle.transform.localPosition.z > 0f)
+            puzzle.transform.Translate(0, 0, -0.05f);
+
+        yield return new WaitForSeconds(0.01f);
+    }
+
 }
-/*
-puzzle.GetComponent<Rigidbody>().AddForce(Vector3.back * power);
-if (puzzle.transform.position.z < 0f)
-    puzzle.transform.position = new Vector3(0, 5.1f, 0);
-puzzle.GetComponent<Rigidbody>().AddForce(Vector3.forward * power);
-if (puzzle.transform.position.z > 5.1f)
-    puzzle.transform.position += new Vector3(0, 5.1f - puzzle.transform.position.z, 0);*/

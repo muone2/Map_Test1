@@ -5,7 +5,7 @@ using UnityEngine;
 public class resetPos : MonoBehaviour
 {
     public GameObject ball;
-    Vector3 posa;
+    public Vector3 posa;
     private void Start()
     {
         posa = ball.transform.position;
@@ -13,7 +13,7 @@ public class resetPos : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ball"))
+        if (collision.gameObject.CompareTag("Ball") || collision.gameObject.CompareTag("Player"))
         {
             collision.gameObject.transform.position = posa;
         }
